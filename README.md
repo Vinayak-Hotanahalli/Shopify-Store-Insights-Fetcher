@@ -1,93 +1,203 @@
-# Shopify Store Insights-Fetcher API
+# 🛒 Shopify Store Insights Fetcher Application
 
-A Python-based FastAPI project to extract structured brand insights from Shopify-based web stores without using the official Shopify API.
+[![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Framework-green?logo=fastapi)](https://fastapi.tiangolo.com/)
+[![LangChain](https://img.shields.io/badge/LangChain-Agent-yellow?logo=langchain)](https://www.langchain.com/)
+[![Status](https://img.shields.io/badge/Status-In%20Progress-orange)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
----
+> 🔍 Extracts insights from Shopify stores using FastAPI + LangChain agent.
 
-## 🧩 Problem Statement
 
-**Shopify** is one of the most popular platforms for D2C businesses to build online stores. Our goal is to extract important brand information from public Shopify store URLs and structure it in a usable JSON format. The extracted data includes product catalog, brand story, policies, contact details, social handles, and more.
+## 🚀 Overview
 
-This API fetches and organizes a Shopify store's web content into a structured JSON object. The implementation ensures clean design, scalability, and maintainability by following industry best practices like OOP, SOLID principles, and RESTful conventions.
+This project is a Python-based backend system that fetches and organizes insights from Shopify-based e-commerce stores **without using the official Shopify API**. It is developed as part of the GenAI Developer Intern Assignment and follows best practices of backend design, RESTful architecture, and clean code.
 
----
-
-## 🎯 Key Features
-
-### ✅ Mandatory Requirements Implemented
-- [x] Fetch Whole Product Catalog (`/products.json`)
-- [x] Extract Hero Products (from homepage)
-- [x] Extract Privacy Policy and Return/Refund Policies
-- [x] Extract FAQs listed on site
-- [x] Detect and parse brand’s social media handles
-- [x] Extract brand contact information (emails, phone numbers)
-- [x] Extract Brand Story or About the Brand
-- [x] Extract key links like Order Tracking, Contact Us, Blogs
-- [x] Expose `/get-insights?website_url=<shopify-store-url>` API route with structured JSON response
-
-### 🚀 Bonus Features (Implemented)
-- [x] Competitor Analysis using Google Search (basic)
-- [x] Store structured insights and metadata in MySQL Database
+The application extracts structured brand information such as product catalogs, hero products, privacy policies, FAQs, social media links, and more from a given Shopify store URL.
 
 ---
 
-## 📦 Tech Stack
+## 📁 Project Structure
 
-- **Backend Framework:** FastAPI
-- **Language:** Python 3.10+
-- **Database:** MySQL (via SQLAlchemy ORM)
-- **Web Scraping:** BeautifulSoup, Requests
-- **LLM Integration:** (Optional, for structuring messy data)
-- **Testing:** Postman Collection / Swagger UI
-- **Deployment Ready:** Localhost with `uvicorn`, extensible to Docker or cloud
-
----
-
-## 🛠 Project Structure
-
-```plaintext
-shopify-insights-fetcher/
-├── app.py                   # Main Flask application
-├── scraper.py              # Web scraping logic
-├── utils.py                # Utility functions (e.g. URL cleaners, validators)
-├── models.py               # Data models and schemas
-├── requirements.txt        # Dependencies
-├── README.md               # Project documentation
-└── .gitignore              # Ignored files
-```
-
+| File/Folder        | Description                          |
+|--------------------|--------------------------------------|
+| `__pycache__/`     | Compiled Python files (auto-created) |
+| `app.py`           | FastAPI or main application entry    |
+| `main.py`          | Main routing or logic file           |
+| `models.py`        | Defines data models/schema           |
+| `scraper.py`       | Contains web scraping logic          |
+| `utils.py`         | Helper/utility functions             |
+| `requirements.txt` | Project dependencies list            |
 
 ---
 
-## 🔍 How It Works
+## 📌 Features
 
-### 1. **API Endpoint**
-`GET /get-insights?website_url=https://example-shop.myshopify.com`
+- Extracts detailed brand insights from any Shopify store URL, including:
+  - Entire Product Catalog
+  - Hero Products (Homepage Highlights)
+  - Privacy Policy
+  - Return and Refund Policies
+  - FAQs (Supports various formats)
+  - Social Media Handles (Instagram, Facebook, etc.)
+  - Contact Information (Emails, Phone Numbers)
+  - About the Brand Section
+  - Other Important Links (Order Tracking, Blogs, etc.)
 
-Returns JSON response:
+- RESTful API built with FastAPI or Flask
+- JSON responses with appropriate HTTP status codes
+- Optional: Structured data persisted in a MySQL database (Bonus)
+- Optional: Competitor Analysis and Insights Extraction (Bonus)
+
+
+---
+## 🛠 Tech Stack
+
+| Component        | Technology     |
+|------------------|----------------|
+| Backend Language | Python         |
+| Framework        | FastAPI / Flask|
+| Database         | MySQL (optional) |
+| Web Scraping     | BeautifulSoup, Requests |
+| Deployment Ready | Yes (Postman/UI Supported) |
+
+---
+
+
+## 🔗 API Endpoint
+
+### `POST /get-insights`
+
+**Request:**
+
 ```json
 {
-  "store_name": "Example Brand",
-  "hero_products": [...],
-  "product_catalog": [...],
-  "privacy_policy": "...",
-  "return_policy": "...",
-  "faqs": [...],
-  "about_us": "...",
-  "social_links": {
-    "instagram": "...",
-    "facebook": "...",
-    "youtube": "..."
-  },
-  "contact": {
-    "emails": [...],
-    "phone_numbers": [...]
-  },
-  "important_links": {
-    "order_tracking": "...",
-    "contact_us": "...",
-    "blogs": "..."
-  }
+  "url": "https://www.allbirds.com"
 }
 
+```
+
+**Success Response (200):**
+
+```json
+{
+  "brand_name": "Example Store",
+  "products": [...],
+  "hero_products": [...],
+  "privacy_policy": "...",
+  "refund_policy": "...",
+  "faqs": [
+    {
+      "question": "...",
+      "answer": "..."
+    }
+  ],
+  "social_handles": {
+    "instagram": "...",
+    "facebook": "..."
+  },
+  "contact_info": {
+    "email": "...",
+    "phone": "..."
+  },
+  "about_brand": "...",
+  "important_links": {
+    "order_tracking": "...",
+    "blogs": "...",
+    "contact_us": "..."
+  }
+}
+```
+
+**Error Responses:**
+
+* `401 Unauthorized` – If the given website is invalid or not found
+* `500 Internal Server Error` – For any unhandled exceptions or runtime issues
+
+---
+
+## ⚙️ Setup & Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Vinayak-Hotanahalli/Shopify-Store-Insights-Fetcher.git
+cd shopify-insights-fetcher
+```
+
+### 2. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Run the application
+
+Using FastAPI:
+
+```bash
+uvicorn app:app --reload
+```
+
+Using Flask:
+
+```bash
+python app.py
+```
+
+### 4. Test via Postman or Browser
+
+Visit: `http://127.0.0.1:8000/docs` (if using FastAPI)
+or test API endpoint with Postman by sending `POST` request to `/get-insights`.
+
+---
+
+## ✅ Mandatory Tasks Implemented
+
+* [x] Fetch Shopify website data without API
+* [x] Extract structured insights (Products, Policies, FAQs, etc.)
+* [x] REST API with error handling
+* [x] Return JSON response
+* [x] Followed clean code, OOP, SOLID principles
+
+---
+
+## ⭐ Bonus Section (If Implemented)
+
+* [ ]  Competitor Analysis and Insights
+* [ ]  Data Persistence using MySQL
+* [ ]  LLM-based data structuring for unstructured pages
+
+---
+
+## 📎 References
+
+* Example Shopify Sites:
+
+  * [https://memy.co.in](https://memy.co.in)
+  * [https://hairoriginals.com](https://hairoriginals.com)
+* List of Shopify Stores:
+
+  * [https://webinopoly.com/blogs/news/top-100-most-successful-shopify-stores](https://webinopoly.com/blogs/news/top-100-most-successful-shopify-stores)
+* Shopify Pattern Hint:
+
+  * `https://<shopify-site>/products.json`
+
+---
+
+## 👨‍💻 Developer Notes
+
+* FAQs scraping supports both flat and paginated structures.
+* Data is cleaned and normalized into structured formats.
+* Modular codebase for maintainability and reusability.
+* Easy to extend for future enhancements.
+
+---
+
+## 📬 Contact
+
+**👤 Vinayak Girish Hotanahalli**  
+📧 [vinayakhotanahalli72@gmail.com](mailto:vinayakhotanahalli72@gmail.com)  
+🔗 [LinkedIn](https://www.linkedin.com/in/vinayak-hotanahalli-2775b929b)  
+🐙 [GitHub](https://github.com/Vinayak-Hotanahalli)
 
